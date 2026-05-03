@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio da semana sprint 3</title>
+</head>
+<body>
+
+    <input type="number" name="" id="ipt_RA"><br>
+    <input type="number" name="" id="ipt_nota"><br>
+    <button onclick="cadastrar()">Cadastrar</button>
+    <button onclick="excluir()">Excluir</button>
+    <button onclick="alterar()">Alterar</button>
+
+    
+</body>
+</html>
+
+<script>
+
+    let listaNota = []
+    let listaRa = []
+
+    function cadastrar(){
+        let ra = Number(ipt_RA.value)
+        let nota = Number(ipt_nota.value)
+
+        if(ra < 2000 || ra > 3000){
+            alert("O RA deve estar entre 2000 e 3000");
+        }else if(nota < 0 || nota > 10){
+            alert("A nota deve ser entre 0 e 10")
+        }else{
+            listaRa.push(ra)
+            listaNota.push(nota)
+        }
+    }
+
+    function excluir(){
+        let ra = Number(ipt_RA.value)
+        let nota = Number(ipt_nota.value)
+
+        if(ra < 2000 || ra > 3000){
+            alert("O RA deve estar entre 2000 e 3000");
+        }else if(nota < 0 || nota > 10){
+            alert("A nota deve ser entre 0 e 10")
+        }else{
+            let indexExclusao = listaRa.indexOf(ra);
+
+            if(indexExclusao == -1){
+                alert("O RA nao doi encontrado")
+            }else{
+                listaNota.splice(indexExclusao,1)
+                listaRa.splice(indexExclusao,1)
+            }
+        }
+    }
+
+    function alterar(){
+        
+    }
+
+
+</script>
