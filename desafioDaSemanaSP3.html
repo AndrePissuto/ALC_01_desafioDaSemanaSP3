@@ -1,64 +1,379 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desafio da semana sprint 3</title>
 </head>
+
 <body>
+    <div id="divManutencao" style="display: none;">
 
-    <input type="number" name="" id="ipt_RA"><br>
-    <input type="number" name="" id="ipt_nota"><br>
-    <button onclick="cadastrar()">Cadastrar</button>
-    <button onclick="excluir()">Excluir</button>
-    <button onclick="alterar()">Alterar</button>
+        <h4>Manutenção das notas</h4>
+        R.A: <input type="number" name="" id="ipt_RA"><br>
+        Nota: <input type="number" name="" id="ipt_nota"><br>
+        <button onclick="cadastrar()">Incluir</button>
+        <button onclick="excluir()">Excluir</button><br><br>
+        <button onclick="alterar()">Alterar</button>
+        Nota: <input type="number" name="" id="ipt_notaAlterar"><br><br>
+        <button onclick="ajustarNotas()">Ajustar notas</button><br><br>
+        <button onclick="consulta()">Consultar</button>
+        <div id="out_msg"></div>
 
-    
+    </div>
+
+    <div id="divAjustarNotas" style="display: block;">
+
+        <h4>Tela ajustar notas</h4>
+        R.A.
+        de: <input type="number" name="" id="ipt_deAjuste">
+        até: <input type="number" name="" id="ipt_ateAjuste"><br><br>
+
+        <button>Bonus</button>
+        Pontos: <input type="number" name="" id="ipt_bonusPontos">
+        %: <input type="number" name="" id="ipt_bonusPorcentagem"><br>
+
+        Ou<br>
+
+        <button>Redução</button>
+        Pontos: <input type="number" name="" id="ipt_reducaoPontos">
+        %: <input type="number" name="" id="ipt_reducaoPorcentagem"><br>
+
+        <button onclick="ajustarNotas()">Voltar</button>
+        <div id="out_Ajustar"></div>
+
+    </div>
+
+    <div id="divConsulta" style="display: none;">
+
+        <h4>Tela de consulta</h4>
+        <button onclick="consultaPorRA()">Por R.A.</button>
+        de: <input type="number" name="" id="ipt_deRaConsulta">
+        até: <input type="number" name="" id="ipt_ateRaConsulta"><br>
+
+        <button onclick="consultaPorNota()">Por Nota.</button>
+        de: <input type="number" name="" id="ipt_deNotaConsulta">
+        até: <input type="number" name="" id="ipt_ateNotaConsulta"><br>
+
+        <button onclick="consulta()">Voltar</button>
+
+        <h4 style="display: none;" id="cadastrosSelecionados">cadastros selecionados</h4>
+        <div id="out_consulta"></div>
+    </div>
+
+
+
+
 </body>
+
 </html>
 
 <script>
 
-    let listaNota = []
-    let listaRa = []
+    let listaRa = [2000, 2001, 2002, 2001, 3000]
+    let listaNota = [10, 5, 6, 7, 8]
 
-    function cadastrar(){
+
+    function ajustarNotas() {
+        if (divManutencao.style.display == 'block') {
+            divManutencao.style.display = 'none'
+            divAjustarNotas.style.display = 'block'
+        } else {
+            divManutencao.style.display = 'block'
+            divAjustarNotas.style.display = 'none'
+        }
+    }
+
+    function consulta() {
+        if (divManutencao.style.display == 'block') {
+            divManutencao.style.display = 'none'
+            divConsulta.style.display = 'block'
+        } else {
+            divManutencao.style.display = 'block'
+            divConsulta.style.display = 'none'
+        }
+    }
+
+    function cadastrar() {
         let ra = Number(ipt_RA.value)
         let nota = Number(ipt_nota.value)
 
-        if(ra < 2000 || ra > 3000){
+        if ((ra < 2000 || ra > 3000) || ipt_RA.value == '') {
             alert("O RA deve estar entre 2000 e 3000");
-        }else if(nota < 0 || nota > 10){
+        } else if ((nota < 0 || nota > 10) || ipt_nota.value == '') {
             alert("A nota deve ser entre 0 e 10")
-        }else{
+        } else {
             listaRa.push(ra)
             listaNota.push(nota)
-        }
-    }
 
-    function excluir(){
-        let ra = Number(ipt_RA.value)
-        let nota = Number(ipt_nota.value)
-
-        if(ra < 2000 || ra > 3000){
-            alert("O RA deve estar entre 2000 e 3000");
-        }else if(nota < 0 || nota > 10){
-            alert("A nota deve ser entre 0 e 10")
-        }else{
-            let indexExclusao = listaRa.indexOf(ra);
-
-            if(indexExclusao == -1){
-                alert("O RA nao doi encontrado")
-            }else{
-                listaNota.splice(indexExclusao,1)
-                listaRa.splice(indexExclusao,1)
+            out_msg.innerHTML = ''
+            for (let i = listaNota.length - 1; i >= 0; i--) {
+                out_msg.innerHTML += `
+                ${i + 1}.<br>                
+                R.A.: ${listaRa[i]}<br>
+                Nota: ${listaNota[i]}<br><br>
+                `
             }
         }
+        console.log(listaNota, listaRa)
     }
 
-    function alterar(){
-        
+    function excluir() {
+        let ra = Number(ipt_RA.value)
+
+        if ((ra < 2000 || ra > 3000) || ipt_RA.value == '') {
+            alert("O RA deve estar entre 2000 e 3000");
+        } else {
+            let indexExclusao = listaRa.indexOf(ra);
+
+            if (indexExclusao == -1) {
+                alert("O RA nao foi encontrado")
+            } else {
+                listaNota.splice(indexExclusao, 1)
+                listaRa.splice(indexExclusao, 1)
+
+                out_msg.innerHTML = ''
+                for (let i = listaNota.length - 1; i >= 0; i--) {
+                    out_msg.innerHTML += `
+                ${i + 1}.<br>                
+                R.A.: ${listaRa[i]}<br>
+                Nota: ${listaNota[i]}<br><br>
+                `
+                }
+            }
+        }
+        console.log(listaNota, listaRa)
     }
+
+    function alterar() {
+        let ra = Number(ipt_RA.value)
+        let nota = Number(ipt_nota.value)
+        let notaAlterar = Number(ipt_notaAlterar.value)
+
+        if ((ra < 2000 || ra > 3000) || ipt_RA.value == '') {
+            alert("O RA deve estar entre 2000 e 3000");
+        } else if ((nota < 0 || nota > 10) || ipt_nota.value == '') {
+            alert("A nota deve ser entre 0 e 10")
+        } else if ((notaAlterar < 0 || notaAlterar > 10) || ipt_notaAlterar.value == '') {
+            alert("O valor da nota alterada precisa estar entre 0 e 10")
+        } else {
+            let encontrou = false;
+            for (let i = 0; i <= listaNota.length - 1; i++) {
+                if (ra == listaRa[i] && nota == listaNota[i]) {
+                    listaNota[i] = notaAlterar;
+                    encontrou = true
+                    break
+                }
+            }
+
+            if (encontrou == false) {
+                alert("Nao encontrado")
+            }
+
+            out_msg.innerHTML = ''
+            for (let i = listaNota.length - 1; i >= 0; i--) {
+                out_msg.innerHTML += `
+                    ${i + 1}.<br>                
+                    R.A.: ${listaRa[i]}<br>
+                    Nota: ${listaNota[i]}<br><br>
+                    `
+            }
+        }
+        console.log(listaNota, listaRa)
+    }
+
+    function consultaPorRA() {
+        let inicio = Number(ipt_deRaConsulta.value)
+        let fim = Number(ipt_ateRaConsulta.value)
+
+        if (inicio >= fim) {
+            alert("o inicio nao pode ser maior nem igual que o fim")
+        } else if (inicio < 2000 || inicio > 3000 || fim < 2000 || fim > 3000) {
+            alert("O ra deve estar entre 2000 e 3000")
+        } else {
+            out_consulta.innerHTML = ""
+            cadastrosSelecionados.style.display = "block"
+
+            let maiorNotaIntervalo = 0
+            let menorNotaIntervalo = 10
+            let mediaNotaIntervalo = 0
+            let somaIntervalo = 0
+
+            let maiorNotaVetor = 0
+            let menorNotaVetor = 10
+            let mediaNotaVetor = 0
+            let qtdacima8 = 0
+            let qtdabaixo4 = 0
+            let somaVetor = 0
+
+            let cont = 0
+
+            for (let i = 0; i <= listaNota.length - 1; i++) {
+                somaVetor += listaNota[i]
+                if (listaNota[i] > maiorNotaVetor) {
+                    maiorNotaVetor = listaNota[i]
+                }
+                if (listaNota[i] < menorNotaVetor) {
+                    menorNotaVetor = listaNota[i]
+                }
+                if (listaNota[i] > 8) {
+                    qtdacima8++
+                }
+                if (listaNota[i] < 4) {
+                    qtdabaixo4++
+                }
+
+                if (listaRa[i] >= inicio && listaRa[i] <= fim && listaRa != undefined) {
+
+                    somaIntervalo += listaNota[i]
+                    if (listaNota[i] > maiorNotaIntervalo) {
+                        maiorNotaIntervalo = listaNota[i]
+                    }
+                    if (listaNota[i] < menorNotaIntervalo) {
+                        menorNotaIntervalo = listaNota[i]
+                    }
+                    cont++
+                }
+            }
+
+            mediaNotaVetor = somaVetor / listaNota.length
+            mediaNotaIntervalo = somaIntervalo / cont
+
+            if (cont == 0) {
+                alert("não foi encontrado nada nesse intervalo")
+            }
+            else {
+                for (let i = 0; i <= listaNota.length - 1; i++) {
+                    if (listaRa[i] >= inicio && listaRa[i] <= fim) {
+                        out_consulta.innerHTML += `${i + 1}˚ - R.A. ${listaRa[i]} - Nota: ${listaNota[i]}<br>`
+                    }
+                }
+
+                out_consulta.innerHTML += `
+                <br><br>
+                <h4>Resumo final<h4>
+                total de ocorrencias listadas: ${cont}<br>
+                maior nota do intervalo: ${maiorNotaIntervalo}<br>
+                menor nota do intervalo: ${menorNotaIntervalo}<br>
+                media das notas do intervalo: ${mediaNotaIntervalo.toFixed(2)}<br><br>
+
+                total de ocorrencias do vetor: ${listaNota.length}<br>
+                maior nota do vetor: ${maiorNotaVetor}<br>
+                menor nota vetor: ${menorNotaVetor}<br>
+                media das notas do vetor: ${mediaNotaVetor.toFixed(2)}<br>
+                total de alunos com nota acima de 8 no vetor: ${qtdacima8}<br>
+                total de alunos com nota abaixo de 4 no vetor: ${qtdabaixo4}`
+            }
+
+            console.log(listaNota[0])
+        }
+
+
+    }
+
+    function consultaPorNota() {
+        let inicio = Number(ipt_deNotaConsulta.value)
+        let fim = Number(ipt_ateNotaConsulta.value)
+
+        if (inicio > fim) {
+            alert("o inicio nao pode ser maior que o fim")
+        } else if (inicio < 0 || inicio > 10 || fim < 0 || fim > 10) {
+            alert("a nota deve estar entre 0 e 10")
+        } else {
+            out_consulta.innerHTML = ""
+            cadastrosSelecionados.style.display = "block"
+
+            let maiorNotaIntervalo = 0
+            let menorNotaIntervalo = 10
+            let mediaNotaIntervalo = 0
+            let somaIntervalo = 0
+
+            let maiorNotaVetor = 0
+            let menorNotaVetor = 10
+            let mediaNotaVetor = 0
+            let qtdacima8 = 0
+            let qtdabaixo4 = 0
+            let somaVetor = 0
+
+            let cont = 0
+
+            for (let i = 0; i <= listaNota.length - 1; i++) {
+                somaVetor += listaNota[i]
+                if (listaNota[i] > maiorNotaVetor) {
+                    maiorNotaVetor = listaNota[i]
+                }
+                if (listaNota[i] < menorNotaVetor) {
+                    menorNotaVetor = listaNota[i]
+                }
+                if (listaNota[i] > 8) {
+                    qtdacima8++
+                }
+                if (listaNota[i] < 4) {
+                    qtdabaixo4++
+                }
+
+                /*intervalo*/
+                if (listaNota[i] >= inicio && listaNota[i] <= fim && listaNota != undefined) {
+
+                    somaIntervalo += listaNota[i]
+                    if (listaNota[i] > maiorNotaIntervalo) {
+                        maiorNotaIntervalo = listaNota[i]
+                    }
+                    if (listaNota[i] < menorNotaIntervalo) {
+                        menorNotaIntervalo = listaNota[i]
+                    }
+                    cont++
+                }
+            }
+
+            mediaNotaVetor = somaVetor / listaNota.length
+            mediaNotaIntervalo = somaIntervalo / cont
+
+            if (cont == 0) {
+                alert("nada foi encontrado no intervalo")
+            } else {
+                for (let i = 0; i <= listaNota.length - 1; i++) {
+                    if (listaNota[i] >= inicio && listaNota[i] <= fim) {
+                        out_consulta.innerHTML += `${i + 1}˚ - R.A. ${listaRa[i]} - Nota: ${listaNota[i]}<br>`
+                    }
+                }
+
+                out_consulta.innerHTML += `
+                <br><br>
+                <h4>Resumo final<h4>
+                total de ocorrencias listadas: ${cont}<br>
+                maior nota do intervalo: ${maiorNotaIntervalo}<br>
+                menor nota do intervalo: ${menorNotaIntervalo}<br>
+                media das notas do intervalo: ${mediaNotaIntervalo.toFixed(2)}<br><br>
+
+                total de ocorrencias do vetor: ${listaNota.length}<br>
+                maior nota do vetor: ${maiorNotaVetor}<br>
+                menor nota vetor: ${menorNotaVetor}<br>
+                media das notas do vetor: ${mediaNotaVetor.toFixed(2)}<br>
+                total de alunos com nota acima de 8 no vetor: ${qtdacima8}<br>
+                total de alunos com nota abaixo de 4 no vetor: ${qtdabaixo4}`
+            }
+
+            console.log(listaNota[0])
+        }
+    }
+
+    function ajusteBonus(){
+        let inicio = Number(ipt_deAjuste.value)
+        let fim = Number(ipt_ateAjuste.value)
+
+        let 
+
+        if(inicio > fim){
+            alert("o inicio nao pode ser maior que o fim")
+        }else if(inicio < 2000 || inicio > 3000 || fim < 2000 || fim > 3000){
+            alert("O Ra deve estar entre 2000 e 3000")
+        }else{
+
+        }
+    }
+
 
 
 </script>
