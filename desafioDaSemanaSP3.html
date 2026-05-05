@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div id="divManutencao" style="display: none;">
+    <div id="divManutencao" style="display: block;">
 
         <h4>Manutenção das notas</h4>
         R.A: <input type="number" name="" id="ipt_RA"><br>
@@ -23,20 +23,20 @@
 
     </div>
 
-    <div id="divAjustarNotas" style="display: block;">
+    <div id="divAjustarNotas" style="display: none;">
 
         <h4>Tela ajustar notas</h4>
         R.A.
         de: <input type="number" name="" id="ipt_deAjuste">
         até: <input type="number" name="" id="ipt_ateAjuste"><br><br>
 
-        <button>Bonus</button>
+        <button onclick="ajusteBonus()">Bonus</button>
         Pontos: <input type="number" name="" id="ipt_bonusPontos">
         %: <input type="number" name="" id="ipt_bonusPorcentagem"><br>
 
         Ou<br>
 
-        <button>Redução</button>
+        <button onclick="ajusteReducao()">Redução</button>
         Pontos: <input type="number" name="" id="ipt_reducaoPontos">
         %: <input type="number" name="" id="ipt_reducaoPorcentagem"><br>
 
@@ -359,21 +359,116 @@
         }
     }
 
-    function ajusteBonus(){
+    function ajusteBonus() {
         let inicio = Number(ipt_deAjuste.value)
         let fim = Number(ipt_ateAjuste.value)
 
-        let 
+        let bonusPontos = Number(ipt_bonusPontos.value)
+        let bonusPorcentagem = Number(ipt_bonusPorcentagem.value)
 
-        if(inicio > fim){
+        if (inicio > fim) {
             alert("o inicio nao pode ser maior que o fim")
-        }else if(inicio < 2000 || inicio > 3000 || fim < 2000 || fim > 3000){
+        } else if (inicio < 2000 || inicio > 3000 || fim < 2000 || fim > 3000) {
             alert("O Ra deve estar entre 2000 e 3000")
-        }else{
+        } else if (bonusPontos != 0 && bonusPorcentagem != 0) {
+            alert("apenas um campo de bonus pode estar preenchido")
+        } else {
 
+            if (bonusPontos != 0 && (bonusPontos < 0.5 || bonusPontos > 1.5)) {
+                alert("pontos dever estar entre 0.5 e 1.5 ou bonus porcentagem deve estr entre 3 e 13")
+            } else if (bonusPorcentagem != 0 && (bonusPorcentagem < 3 || bonusPorcentagem > 13)) {
+                alert("pontos dever estar entre 0.5 e 1.5 ou bonus porcentagem deve estr entre 3 e 13")
+            } else {
+
+                let bonusAleatorio = 0
+                if (bonusPontos == 0 && bonusPorcentagem == 0) {
+                    bonusAleatorio = (Math.random() * 10 + 5).toFixed(0)
+                }
+
+                let cont = 0;
+                out_Ajustar.innerHTML = ""
+                for (let i = 0; i <= listaNota.length - 1; i++) {
+                    if (listaRa[i] >= inicio && listaRa[i] <= fim) {
+                        if (bonusPorcentagem != 0) {
+                            listaNota[i] = listaNota[i] + listaNota[i] * (bonusPorcentagem / 100)
+
+                        }
+                        if (bonusPontos != 0) {
+                            listaNota[i] += bonusPontos
+                        }
+                        if (bonusAleatorio != 0) {
+                            listaNota[i] += listaNota[i] * bonusAleatorio / 100
+                        }
+                        if (listaNota[i] > 10) {
+                            listaNota[i] = 10
+                        }
+                        cont++
+                    }
+                    out_Ajustar.innerHTML += `${i + 1}˚ - R.A. ${listaRa[i]} - Nota: ${listaNota[i].toFixed(2)}<br>`
+
+                }
+                if (cont == 0) {
+                    alert("Nenhum dado foi modificado!")
+                }
+                console.log(bonusAleatorio)
+            }
         }
     }
 
+    function ajusteReducao() {
+        let inicio = Number(ipt_deAjuste.value)
+        let fim = Number(ipt_ateAjuste.value)
 
+        let reducaoPontos = Number(ipt_reducaoPontos.value)
+        let reducaoPorcentagem = Number(ipt_reducaoPorcentagem.value)
+
+        if (inicio > fim) {
+            alert("o inicio nao pode ser maior que o fim")
+        } else if (inicio < 2000 || inicio > 3000 || fim < 2000 || fim > 3000) {
+            alert("O Ra deve estar entre 2000 e 3000")
+        } else if (reducaoPontos != 0 && reducaoPorcentagem != 0) {
+            alert("apenas um campo de bonus pode estar preenchido")
+        } else {
+
+            if (reducaoPontos != 0 && (reducaoPontos < 0.5 || reducaoPontos > 1.5)) {
+                alert("pontos dever estar entre 0.5 e 1.5 ou bonus porcentagem deve estr entre 3 e 13")
+            } else if (reducaoPorcentagem != 0 && (reducaoPorcentagem < 3 || reducaoPorcentagem > 13)) {
+                alert("pontos dever estar entre 0.5 e 1.5 ou bonus porcentagem deve estr entre 3 e 13")
+            } else {
+
+                let reducaoAleatoria = 0
+                if (reducaoPontos == 0 && reducaoPorcentagem == 0) {
+                    reducaoAleatoria = (Math.random() * 10 + 5).toFixed(0)
+                }
+
+                let cont = 0;
+                out_Ajustar.innerHTML = ""
+                for (let i = 0; i <= listaNota.length - 1; i++) {
+                    if (listaRa[i] >= inicio && listaRa[i] <= fim) {
+                        if (reducaoPorcentagem != 0) {
+                            listaNota[i] = listaNota[i] - listaNota[i] * (reducaoPorcentagem / 100)
+                        }
+                        if (reducaoPontos != 0) {
+                            listaNota[i] -= reducaoPontos
+                        }
+                        if (reducaoAleatoria != 0) {
+                            listaNota[i] -= listaNota[i] * reducaoAleatoria / 100
+                        }
+
+                        if (listaNota[i] < 0) {
+                            listaNota[i] = 0
+                        }
+                        cont++
+                    }
+                    out_Ajustar.innerHTML += `${i + 1}˚ - R.A. ${listaRa[i]} - Nota: ${listaNota[i].toFixed(2)}<br>`
+
+                }
+                if (cont == 0) {
+                    alert("Nenhum dado foi modificado!")
+                }
+                console.log(reducaoAleatoria)
+            }
+        }
+    }
 
 </script>
